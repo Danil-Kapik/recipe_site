@@ -1,0 +1,20 @@
+{% extends "recipes/base.html" %}
+
+{% block title %}
+Ингредиенты
+{% endblock %}
+
+{% block content %}
+<h1>Ингредиенты</h1>
+<a href="{% url 'recipes:ingredient-create' %}">Создать Ингредиент</a>
+<ul>
+    {% for ingredient in ingredients %}
+        <li>
+            {{ ingredient.name }} - 
+            {{ ingredient.unit }} -
+            <a href="{% url 'recipes:ingredient-update' ingredient.id %}">Редактировать</a> | 
+            <a href="{% url 'recipes:ingredient-delete' ingredient.id %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

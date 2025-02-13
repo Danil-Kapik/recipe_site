@@ -1,0 +1,40 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}
+  Подтверждение удаления рецепта
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto my-8 px-4">
+  <h1 class="text-3xl font-bold mb-6">Удалить рецепт: "{{ object.title }}"</h1>
+  
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <p class="text-gray-700 mb-4">
+      Вы уверены, что хотите удалить этот рецепт? Это действие необратимо.
+    </p>
+    <div class="flex space-x-4">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+          Удалить
+        </button>
+      </form>
+      <a href="{% url 'recipes:recipe-detail' object.pk %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Отмена
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+<!-- 
+<h1>Удаление существующего рецепта</h1>
+    <p>Вы уверены, что хотите удалить "{{ recipe.title }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да</button>
+    </form>
+<a href="{% url 'recipes:ingredient-list' %}">Назад к списку ингредиентов</a> -->

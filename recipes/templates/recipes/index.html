@@ -1,0 +1,45 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}
+    Главная - Рецепты
+{% endblock %}
+
+
+{% block content %}
+    <!-- Баннер -->
+    <section class="bg-cover bg-center h-64 flex items-center justify-center text-white transition-all" style="background-image: url('https://source.unsplash.com/1600x900/?food');">
+        <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+            <h2 class="text-3xl font-bold mb-4">Поделись своим рецептом!</h2>
+            <a href="{% url 'recipes:recipe-create' %}">
+            <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg transition duration-150 hover:bg-yellow-600">Добавить свой рецепт</button>
+            </a>
+        </div>
+    </section>
+    
+    <!-- Список рецептов -->
+    <main class="container mx-auto my-8 px-4">
+        <h2 class="text-2xl font-bold mb-4">Кушайте, не обляпайтесь!</h2>
+        {% for recipe in random_recipes %}
+        <div class="space-y-6">
+            <!-- Карточка рецепта -->
+                <div class="bg-white shadow-md rounded-lg flex p-4">
+            {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="rounded-lg mr-4" width="250" height="200">
+            {% else %}
+                <div class="rounded-lg mr-4 w-32 h-32 bg-gray-200"></div> <!-- Заглушка, если изображения нет -->
+            {% endif %}
+            <div>
+            <h3 class="text-xl font-bold"><a href="{% url 'recipes:recipe-detail' recipe.pk %}" class="text-blue-500 hover:underline">{{ recipe.title }}</a></h3>
+            <p class="text-gray-600 line-clamp-3">{{ recipe.description }}</p>
+            <p><strong>Автор:</strong> {{ recipe.author.username|default:"Unknown Author" }}</p>
+            <a href="{% url 'recipes:recipe-detail' recipe.pk %}">
+                <button class="mt-2 text-blue-500 hover:underline">Подробнее</button>
+            </a>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+{% endblock %}
+
+
+

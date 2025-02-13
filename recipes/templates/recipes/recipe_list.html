@@ -1,0 +1,65 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}
+    Все рецепты - Рецепты
+{% endblock %}
+
+{% block content %}
+    <main class="container mx-auto my-8 px-4">
+        <!-- Поиск -->
+        <form method="GET" action="" class="mb-4">
+            <input type="text" name="q" placeholder="Поиск рецепта..." value="{{ request.GET.q }}"
+                   class="border border-gray-300 px-4 py-2 rounded-lg w-full">
+            <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                Найти
+            </button>
+        </form>
+        
+        <!-- Список рецептов -->
+        <div class="space-y-6">
+            {% for recipe in recipes %}
+                <div class="bg-white shadow-md rounded-lg flex p-4">
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="rounded-lg mr-4" width="250" height="200">
+                    {% else %}
+                        <div class="rounded-lg mr-4 w-32 h-32 bg-gray-200"></div>
+                    {% endif %}
+                    <div>
+                        <h3 class="text-xl font-bold">
+                            <a href="{% url 'recipes:recipe-detail' recipe.pk %}" class="text-blue-500 hover:underline">
+                                {{ recipe.title }}
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 line-clamp-3">{{ recipe.description }}</p>
+                        <p><strong>Автор:</strong> {{ recipe.author.username|default:"Unknown Author" }}</p>
+                        <a href="{% url 'recipes:recipe-detail' recipe.pk %}">
+                            <button class="mt-2 text-blue-500 hover:underline">Подробнее</button>
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-gray-600">Рецепты не найдены.</p>
+            {% endfor %}
+        </div>
+        
+        <!-- Пагинация -->
+        {% if is_paginated %}
+        <div class="flex justify-center space-x-2 mt-4">
+            {% if page_obj.has_previous %}
+                <a href="?page=1&q={{ query }}" class="px-3 py-1 bg-gray-200 rounded">&laquo; Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}" class="px-3 py-1 bg-gray-200 rounded">‹</a>
+            {% endif %}
+
+            <span class="px-3 py-1 bg-blue-500 text-white rounded">
+                Стр. {{ page_obj.number }} из {{ total_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ query }}" class="px-3 py-1 bg-gray-200 rounded">›</a>
+                <a href="?page={{ total_pages }}&q={{ query }}" class="px-3 py-1 bg-gray-200 rounded">Последняя &raquo;</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    </main>
+{% endblock %}
+

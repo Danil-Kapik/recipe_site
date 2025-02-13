@@ -1,0 +1,19 @@
+{% extends "recipes/base.html" %}
+
+{% block title %}
+Еденицы измерения
+{% endblock %}
+
+{% block content %}
+<h1>Единицы измерения</h1>
+<a href="{% url 'recipes:unit-create' %}">Add Unit</a>
+<ul>
+    {% for unit in units %}
+        <li>
+            {{ unit.name }} - 
+            <a href="{% url 'recipes:unit-update' unit.id %}">Edit</a> | 
+            <a href="{% url 'recipes:unit-delete' unit.id %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "recipes/base.html" %}
+
+{% block title %}
+Редактирование категории
+{% endblock %}
+
+{% block content %}
+<h1>Редактирование существующей категории</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+<a href="{% url 'recipes:category-list' %}">Назад к списку категорий</a>
+{% endblock %}

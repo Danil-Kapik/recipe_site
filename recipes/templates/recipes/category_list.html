@@ -1,0 +1,19 @@
+{% extends "recipes/base.html" %}
+
+{% block title %}
+Категории
+{% endblock %}
+
+{% block content %}
+<h1>Категории</h1>
+<a href="{% url 'recipes:category-create' %}">Создать категорию</a>
+<ul>
+    {% for category in categories %}
+        <li>
+            {{ category.name }} - 
+            <a href="{% url 'recipes:category-update' category.id %}">Редактировать</a> | 
+            <a href="{% url 'recipes:category-delete' category.id %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

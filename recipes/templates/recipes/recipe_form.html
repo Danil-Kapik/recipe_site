@@ -1,0 +1,111 @@
+{% extends 'recipes/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {% if object %}
+    Редактирование рецепта
+  {% else %}
+    Создание нового рецепта
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto my-8 px-4">
+  <h1 class="text-3xl font-bold mb-6">
+    {% if object %}
+      Редактирование рецепта
+    {% else %}
+      Создание нового рецепта
+    {% endif %}
+  </h1>
+  <form method="post" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
+    {% csrf_token %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        {{ form.title.label_tag }}
+        {{ form.title|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Сложность -->
+      <div>
+        {{ form.difficulty.label_tag }}
+        {{ form.difficulty|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Время приготовления -->
+      <div>
+        {{ form.cooking_time.label_tag }}
+        {{ form.cooking_time|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Время подготовки -->
+      <div>
+        {{ form.preparation_time.label_tag }}
+        {{ form.preparation_time|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Порции -->
+      <div>
+        {{ form.servings.label_tag }}
+        {{ form.servings|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Категории -->
+      <div>
+        {{ form.category.label_tag }}
+        {{ form.category|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Изображение -->
+      <div class="md:col-span-2">
+        {{ form.image.label_tag }}
+        {{ form.image|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Описание -->
+      <div class="md:col-span-2">
+        {{ form.description.label_tag }}
+        {{ form.description|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Инструкции -->
+      <div class="md:col-span-2">
+        {{ form.instructions.label_tag }}
+        {{ form.instructions|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+      </div>
+      <!-- Автор -->
+      <div class="hidden">
+        {{ form.author }}
+      </div>
+    </div>
+
+    <!-- Блок ингредиентов -->
+    <h2 class="text-2xl font-bold mt-6 mb-4">Ингредиенты</h2>
+    {{ ingredients.management_form }}
+    {% for form in ingredients %}
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 border p-4 rounded">
+        <div>
+          {{ form.ingredient_name.label_tag }}
+          {{ form.ingredient_name|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+        </div>
+        <div>
+          {{ form.quantity.label_tag }}
+          {{ form.quantity|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+        </div>
+        <div>
+          {{ form.unit.label_tag }}
+          {{ form.unit|add_class:"w-full px-3 py-2 border border-gray-300 rounded" }}
+        </div>
+        {% if form.instance.pk %}
+          <div class="md:col-span-3 flex items-center">
+            {{ form.DELETE }}
+            <span class="ml-2 text-red-500 text-sm">Удалить ингредиент</span>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!-- Кнопки отправки и отмены -->
+    <div class="flex items-center justify-between mt-6">
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        {% if object %}Сохранить изменения{% else %}Сохранить рецепт{% endif %}
+      </button>
+      <a href="{% url 'recipes:recipe-list' %}" class="text-blue-500 hover:underline">Отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+

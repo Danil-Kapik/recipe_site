@@ -1,0 +1,15 @@
+{% extends "recipes/base.html" %}
+
+{% block title %}
+Удаление единиц
+{% endblock %}
+
+{% block content %}
+<h1>Удаление существующих единиц</h1>
+    <p>Вы уверены, что хотите удалить "{{ unit.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да</button>
+    </form>
+<a href="{% url 'recipes:unit-list' %}">Назад к списку единиц</a>
+{% endblock %}

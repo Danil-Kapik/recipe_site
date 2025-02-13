@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Рецепты{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    
+    <!-- Верхнее меню -->
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="{% url 'recipes:recipe-list' %}">
+                <h1 class="text-2xl font-bold">Рецепты</h1>
+            </a>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li>
+                        <a href="{% url 'recipes:index' %}" class="hover:text-blue-500">Главная</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'recipes:recipe-list' %}" class="hover:text-blue-500">Рецепты</a>
+                    </li>
+                    {% if request.resolver_match.view_name == 'recipes:recipe-list' %}
+                        <li class="relative">
+                            <button id="categoriesButton" class="hover:text-blue-500">Категории</button>
+                            <ul id="categoriesList" class="absolute left-0 bg-white shadow-md rounded-lg hidden mt-2 w-40">
+                                {% for category in category %}
+                                    <li>
+                                        <a href="{% url 'recipes:recipe-list' %}?category={{ category.id }}" class="block px-4 py-2 hover:bg-gray-200">
+                                            {{ category.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <!-- <li>
+                        <a href="#" class="hover:text-blue-500">Профиль</a>
+                    </li> -->
+                </ul>
+            </nav>
+            <div id="authButtons">
+                {% if user.is_authenticated %}
+                    {# Отображаю кнопку "Выход", если пользователь аутентифицирован #}
+                    <form method="post" action="{% url 'myauth:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg transition duration-200 hover:bg-red-600">
+                            Выход
+                        </button>
+                    </form>
+                {% else %}
+                    {# Отображаю "Вход" и "Регистрация", если пользователь не аутентифицирован #}
+                    <a href="{% url 'myauth:login' %}">
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg transition duration-200 hover:bg-green-600">
+                            Вход
+                        </button>
+                    </a>
+                    <a href="{% url 'myauth:register' %}">
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 transition duration-200 hover:bg-blue-600">
+                            Регистрация
+                        </button>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+
+{% block content %}
+   
+{% endblock %}
+
+{% block footer %}
+    <!-- Футер -->
+    <footer class="bg-gray-200 py-6 mt-12">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-600">&copy; 2025 Рецепты. Все права защищены.</p>
+            <a href="#" class="text-blue-500 hover:underline">Политика конфиденциальности</a>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('categoriesButton').addEventListener('click', function() {
+            let list = document.getElementById('categoriesList');
+            list.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
