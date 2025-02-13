@@ -10,23 +10,38 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
 from decouple import config
+import logging.config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_DIR = BASE_DIR / 'database'
+DATABASE_DIR.mkdir(exist_ok=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7%#^e1xb058_0--a@^)sp!=9$kzmlf7--x-54=508z-a@bj7*u'
+SECRET_KEY = getenv(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-7%#^e1xb058_0--a@^)sp!=9$kzmlf7--x-54=508z-a@bj7*u'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv('DJANGO_DEBUG', "0") == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '0.0.0.0',
+] + getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+    '0.0.0.0',
+]
 
 
 # Application definition
@@ -84,7 +99,7 @@ WSGI_APPLICATION = 'recipe_website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATABASE_DIR / 'db.sqlite3',
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
@@ -161,6 +176,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+LOGLEVEL = getenv('DLANGO_LOGLEVEL', 'info').upper()
+
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': LOGLEVEL,
+            'handlers': ['console'],
+        },
+    },
+})
+
+
 
 LOGGING = {
     'version': 1,

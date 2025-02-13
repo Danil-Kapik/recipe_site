@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      dockerfile: ./Dockerfile
+    command:
+      - gunicorn
+      - recipe_website.wsgi:application
+      - --bind
+      - "0.0.0.0:8000"
+    ports:
+      - "8000:8080"
+    restart: always
+    env_file:
+      - .env
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+        max-file: "10"
+    volumes:
+      - ./diploma/database:/app/database
